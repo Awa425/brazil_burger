@@ -1,0 +1,12 @@
+//Creation du project
+    composer create-projcet symfony/skeleton 'nom projet'
+// Telechager toutes les composer d'annotation
+    composer require doctrine/annotations
+// Telechager toutes les composer d'annotation
+    composer require symfony/maker-bundle --dev
+//faire la gestion de l'entite manager et tous ce qui permet d'acceder au donnees
+    composer require symfony/orm-pack
+//configuration de la base de donnee
+    DATABASE_URL="mysql://root:@127.0.0.1:3307/live_api?charset=utf8mb4"
+//Pour pouvoir executer cette requete
+    composer require symfony/security-bundle
