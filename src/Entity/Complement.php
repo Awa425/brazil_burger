@@ -6,7 +6,7 @@ use App\Repository\ComplementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ComplementRepository::class)]
-class Complement
+class Complement extends Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

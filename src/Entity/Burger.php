@@ -2,24 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\BurgerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BurgerRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
-class Burger
+#[ApiResource(
+    collectionOperations: ["get", "post"],
+    itemOperations: ["put", "get"]
+)]
+
+class Burger extends Produit
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $categorie;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getCategorie(): ?string
     {

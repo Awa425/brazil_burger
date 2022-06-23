@@ -6,7 +6,7 @@ use App\Repository\FritteRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FritteRepository::class)]
-class Fritte
+class Fritte extends Complement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use App\Entity\Personne;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource()]
+
 class User extends Personne implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
@@ -16,11 +19,13 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
-    #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\ManyToOne(targetEntity: Profil::class, inversedBy: 'users')]
+    private $profil;
 
 
 
@@ -53,7 +58,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_' . $this->profil->getLibelle();
 
         return array_unique($roles);
     }
@@ -87,5 +92,17 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getProfil(): ?Profil
+    {
+        return $this->profil;
+    }
+
+    public function setProfil(?Profil $profil): self
+    {
+        $this->profil = $profil;
+
+        return $this;
     }
 }

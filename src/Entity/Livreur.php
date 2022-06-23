@@ -9,21 +9,12 @@ use App\Repository\LivreurRepository;
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 class Livreur extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $matricule;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getTelephone(): ?string
     {

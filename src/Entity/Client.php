@@ -6,23 +6,13 @@ use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-class Client
+class Client extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $adresse;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getTelephone(): ?string
     {
