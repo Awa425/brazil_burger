@@ -5,25 +5,29 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "descrim", type: "string")]
+#[ORM\DiscriminatorMap(["burger" => "Burger", "menu" => "Menu", "complement" => "Complement"])]
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    protected $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $nom;
+    protected $nom;
 
-    #[ORM\Column(type: 'object', nullable: true)]
-    private $image;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $type;
+    protected $type;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private $prix;
+    protected $prix;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private $image;
 
     public function getId(): ?int
     {
@@ -42,17 +46,9 @@ class Produit
         return $this;
     }
 
-    public function getImage(): ?object
-    {
-        return $this->image;
-    }
 
-    public function setImage(?object $image): self
-    {
-        $this->image = $image;
 
-        return $this;
-    }
+
 
     public function getType(): ?string
     {
@@ -74,6 +70,18 @@ class Produit
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

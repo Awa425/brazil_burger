@@ -10,6 +10,8 @@
     DATABASE_URL="mysql://root:@127.0.0.1:3307/live_api?charset=utf8mb4"
 //Pour pouvoir executer cette requete
     composer require symfony/security-bundle
+//Creer la base de données
+    php bin/console doctrine:database:create
 //iNSTALLATION postman
     sudo snap install postman
 //api-platform sait si une classe est une ressource ou pas
@@ -30,6 +32,12 @@ composer require api
     symfony console make:fixtures
 //Apres avoir terminer sur les fixtures, on met:
     symfony console d:f:l --append
+
+// API platform pour l'utiliser
+    composer require api
+// pour pouvoir considerer une entite comme une ressource, ajouter juste
+    [ApiResource()]
+
 
 
 //Mise en place du Json Web Token (JWT)dans Configuration fichier lexik_jwt_authentication.yaml

@@ -9,6 +9,9 @@ use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "type", type: "string")]
+#[ORM\DiscriminatorMap(["client" => "Client", "gestionnaire" => "Gestionnaire"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource()]
 
@@ -17,17 +20,13 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
 
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $email;
+    protected $email;
 
-    private $roles = [];
+    #[ORM\Column(type: 'json')]
+    protected $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
-
-    #[ORM\ManyToOne(targetEntity: Profil::class, inversedBy: 'users')]
-    private $profil;
-
-
+    protected $password;
 
     public function getEmail(): ?string
     {
@@ -58,7 +57,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_' . $this->profil->getLibelle();
+        $roles[] = 'ROLE_VISITEUR';
 
         return array_unique($roles);
     }
@@ -94,15 +93,15 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
         // $this->plainPassword = null;
     }
 
-    public function getProfil(): ?Profil
-    {
-        return $this->profil;
-    }
+    // public function getProfil(): ?Profil
+    // {
+    //     return $this->profil;
+    // }
 
-    public function setProfil(?Profil $profil): self
-    {
-        $this->profil = $profil;
+    // public function setProfil(?Profil $profil): self
+    // {
+    //     $this->profil = $profil;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

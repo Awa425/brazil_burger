@@ -6,20 +6,12 @@ use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
-class Menu
+class Menu extends Produit
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $nom_menu;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getNomMenu(): ?string
     {

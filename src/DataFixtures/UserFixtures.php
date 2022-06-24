@@ -21,17 +21,12 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $profils = ["GESTIONNAIRE", "CLIENT", "LIVREUR"];
-        foreach ($profils as $key => $libelle) {
-            $profil = new Profil();
-            $profil->setLibelle($libelle);
-            $manager->persist($profil);
-            $manager->flush();
+        foreach ($profils as $libelle) {
+
             for ($i = 1; $i <= 3; $i++) {
                 $user = new User();
-                $user->setProfil($profil);
+                $user->setRoles(['ROLE_' . $libelle]);
                 $user->setEmail(strtolower($libelle) . $i);
-                //Génération des Users
-
                 $password = $this->encoder->hashPassword($user, 'ok');
                 $user->setPassword($password);
                 $manager->persist($user);

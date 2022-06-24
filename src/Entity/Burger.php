@@ -5,27 +5,26 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BurgerRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+// use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Response;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
-#[ApiResource(
-    collectionOperations: ["get", "post"],
-    itemOperations: ["put", "get"]
-)]
+#[ApiResource()]
 
 class Burger extends Produit
 {
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $categorie;
+    #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
+    private $gestionnaire;
 
-    public function getCategorie(): ?string
+    public function getGestionnaire(): ?Gestionnaire
     {
-        return $this->categorie;
+        return $this->gestionnaire;
     }
 
-    public function setCategorie(?string $categorie): self
+    public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
-        $this->categorie = $categorie;
+        $this->gestionnaire = $gestionnaire;
 
         return $this;
     }

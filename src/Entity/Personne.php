@@ -5,22 +5,25 @@ namespace App\Entity;
 use App\Repository\PersonneRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "type", type: "string")]
+#[ORM\DiscriminatorMap(["user" => "User", "livreur" => "Livreur"])]
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
 class Personne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    protected $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $prenom;
+    protected $prenom;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $nom;
+    protected $nom;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $etat;
+    protected $etat;
 
     public function getId(): ?int
     {
