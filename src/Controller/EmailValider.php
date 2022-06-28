@@ -27,5 +27,6 @@ class EmailValider extends AbstractController
         }
         $user->setIsEnable(true);
         $em->flush();
+        return new JsonResponse(['message' => "LE COMPTE EST ACTIVE "], Response::HTTP_OK);
     }
 }

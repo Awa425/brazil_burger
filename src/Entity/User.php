@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use App\Entity\Personne;
-use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\UserRepository;
 use DateTime;
+use App\Entity\Personne;
+use App\Controller\EmailValider;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -30,7 +33,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 class User extends Personne implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
-
+    #[Assert\Email(message: "Le mail '{{ value }}' est invalide.")]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     protected $email;
 
