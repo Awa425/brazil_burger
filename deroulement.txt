@@ -38,7 +38,16 @@ composer require api
 // pour pouvoir considerer une entite comme une ressource, ajouter juste
     [ApiResource()]
 
-
+//*************** Mailer **********
+1. Ajout des proprietes dans User
+    *token
+    *isEnable
+    *expireAt
+2. Ajout methode generate le token dans user
+3. Creation class Mailer dans Service
+4. Creation du controller EmailValider (methode invok)
+5.Modifier le dataPersister
+6. On cree le template
 
 //Mise en place du Json Web Token (JWT)dans Configuration fichier lexik_jwt_authentication.yaml
     token_ttl: 3600(duree du vie du token)

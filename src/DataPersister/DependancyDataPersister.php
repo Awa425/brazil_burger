@@ -2,17 +2,19 @@
 
 namespace App\DataPersister;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\User;
+use App\Services\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DependancyDataPersister implements ContextAwareDataPersisterInterface
 {
-    public function __construct(UserPasswordHasherInterface $encoder, EntityManagerInterface $entityManager)
+    public function __construct(UserPasswordHasherInterface $encoder, EntityManagerInterface $entityManager, Mailer $mailer)
     {
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
+        $this->mailer = $mailer;
     }
     public function supports($data, array $context = []): bool
     {
@@ -25,6 +27,7 @@ class DependancyDataPersister implements ContextAwareDataPersisterInterface
         $data->setPassword($password);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+        $this->mailer->sendEmail($data);
     }
 
     public function remove($data, array $context = [])

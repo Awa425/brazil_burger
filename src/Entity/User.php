@@ -6,6 +6,7 @@ use App\Entity\Personne;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -13,7 +14,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ORM\DiscriminatorMap(["client" => "Client", "gestionnaire" => "Gestionnaire"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post',
+        'VALIDMAIL' => [
+            'method' => 'PATCH',
+            'path' => 'user/valide/{token}',
+            'deserialize' => false,
+            'controller' => EmailValider::class
+        ]
+    ]
+)]
 
 class User extends Personne implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -28,6 +40,20 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     #[ORM\Column(type: 'string')]
     protected $password;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isEnable;
+
+    #[ORM\Column(type: 'datetime')]
+    private $expireAt;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $token;
+
+    public function __construct()
+    {
+        $this->generateToken();
+        $this->isEnable = false;
+    }
     public function getEmail(): ?string
     {
         return $this->email;
@@ -93,15 +119,45 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
         // $this->plainPassword = null;
     }
 
-    // public function getProfil(): ?Profil
-    // {
-    //     return $this->profil;
-    // }
+    public function generateToken()
+    {
+        $this->expireAt = new \DateTime('+1 day');
+        $this->token = rtrim(strtr(base64_encode(random_bytes(128)), '+/', '-_'), '=');
+    }
 
-    // public function setProfil(?Profil $profil): self
-    // {
-    //     $this->profil = $profil;
+    public function isIsEnable(): ?bool
+    {
+        return $this->isEnable;
+    }
 
-    //     return $this;
-    // }
+    public function setIsEnable(bool $isEnable): self
+    {
+        $this->isEnable = $isEnable;
+
+        return $this;
+    }
+
+    public function getExpireAt(): ?\DateTimeInterface
+    {
+        return $this->expireAt;
+    }
+
+    public function setExpireAt(\DateTimeInterface $expireAt): self
+    {
+        $this->expireAt = $expireAt;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
 }
