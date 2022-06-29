@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,6 +36,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
 
     #[Assert\Email(message: "Le mail '{{ value }}' est invalide.")]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(["all"])]
     protected $email;
 
     #[ORM\Column(type: 'json')]
@@ -56,6 +58,10 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
     {
         $this->generateToken();
         $this->isEnable = false;
+        $table = get_called_class();
+        $table = explode("\\", $table);
+        $table = strtoupper($table[2]);
+        $this->roles[] = "ROLE_" . $table;
     }
     public function getEmail(): ?string
     {

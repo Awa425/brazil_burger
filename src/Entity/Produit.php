@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "descrim", type: "string")]
@@ -23,8 +25,10 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["simple", "all"])]
     protected $id;
 
+    #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected $nom;
 
@@ -32,14 +36,16 @@ class Produit
     // #[ORM\Column(type: 'string', length: 50, nullable: true)]
     // protected $type;
 
+    #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'float', nullable: true)]
     protected $prix;
 
+    #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $image;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $etat;
+    private $etat = true;
 
     public function getId(): ?int
     {

@@ -2,20 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\MenuRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MenuRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
+#[ApiResource()]
 class Menu extends Produit
 {
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $nom_menu;
 
-    #[ORM\ManyToMany(targetEntity: Complement::class, mappedBy: 'menus')]
-    private $complements;
 
     #[ORM\ManyToMany(targetEntity: Burger::class, mappedBy: 'menus')]
     private $burgers;
@@ -25,7 +25,6 @@ class Menu extends Produit
 
     public function __construct()
     {
-        $this->complements = new ArrayCollection();
         $this->burgers = new ArrayCollection();
     }
 
@@ -42,32 +41,6 @@ class Menu extends Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Complement>
-     */
-    public function getComplements(): Collection
-    {
-        return $this->complements;
-    }
-
-    public function addComplement(Complement $complement): self
-    {
-        if (!$this->complements->contains($complement)) {
-            $this->complements[] = $complement;
-            $complement->addMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComplement(Complement $complement): self
-    {
-        if ($this->complements->removeElement($complement)) {
-            $complement->removeMenu($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Burger>

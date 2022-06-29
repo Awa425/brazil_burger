@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Complement;
+use App\Entity\Catalogue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Complement>
+ * @extends ServiceEntityRepository<Catalogue>
  *
- * @method Complement|null find($id, $lockMode = null, $lockVersion = null)
- * @method Complement|null findOneBy(array $criteria, array $orderBy = null)
- * @method Complement[]    findAll()
- * @method Complement[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Catalogue|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Catalogue|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Catalogue[]    findAll()
+ * @method Catalogue[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ComplementRepository extends ServiceEntityRepository
+class CatalogueRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Complement::class);
+        parent::__construct($registry, Catalogue::class);
     }
 
-    public function add(Complement $entity, bool $flush = false): void
+    public function add(Catalogue $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ComplementRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Complement $entity, bool $flush = false): void
+    public function remove(Catalogue $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ComplementRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Complement[] Returns an array of Complement objects
+//     * @return Catalogue[] Returns an array of Catalogue objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ComplementRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Complement
+//    public function findOneBySomeField($value): ?Catalogue
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

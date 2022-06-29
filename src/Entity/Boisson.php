@@ -8,6 +8,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource()]
-class Boisson extends Complement
+class Boisson extends Produit
 {
 }
