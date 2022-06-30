@@ -20,8 +20,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['simple']],
         ],
         "post" => [
-            'denormalization_context' => ['groups' => ['write']],
-            'normalization_context' => ['groups' => ['all']],
+            // 'denormalization_context' => ['groups' => ['write']],
+            // 'normalization_context' => ['groups' => ['all']],
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
@@ -50,7 +50,7 @@ class Burger extends Produit
     private $menus;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
-    #[Groups(["write", "all"])]
+    // #[Groups(["all"])]
     private $gestionnaire;
 
     public function __construct()

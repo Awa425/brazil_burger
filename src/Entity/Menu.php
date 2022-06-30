@@ -7,38 +7,35 @@ use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            'normalization_context' => ['groups' => ['menu_all']],
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message" => "Vous n'avez pas access à cette Ressource",
+        ]
+    ]
+)]
 class Menu extends Produit
 {
-
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $nom_menu;
-
 
     #[ORM\ManyToMany(targetEntity: Burger::class, mappedBy: 'menus')]
     private $burgers;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
+    #[Groups(["menu_all"])]
     private $gestionnaire;
+
+    #[ORM\ManyToMany(targetEntity: Fritte::class, inversedBy: 'menus')]
+    private $fritte;
 
     public function __construct()
     {
         $this->burgers = new ArrayCollection();
-    }
-
-
-    public function getNomMenu(): ?string
-    {
-        return $this->nom_menu;
-    }
-
-    public function setNomMenu(?string $nom_menu): self
-    {
-        $this->nom_menu = $nom_menu;
-
-        return $this;
+        $this->fritte = new ArrayCollection();
     }
 
 
@@ -77,6 +74,30 @@ class Menu extends Produit
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Fritte>
+     */
+    public function getFritte(): Collection
+    {
+        return $this->fritte;
+    }
+
+    public function addFritte(Fritte $fritte): self
+    {
+        if (!$this->fritte->contains($fritte)) {
+            $this->fritte[] = $fritte;
+        }
+
+        return $this;
+    }
+
+    public function removeFritte(Fritte $fritte): self
+    {
+        $this->fritte->removeElement($fritte);
 
         return $this;
     }

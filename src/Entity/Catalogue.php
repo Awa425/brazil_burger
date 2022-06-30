@@ -10,7 +10,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
         "get" => [
             "method" => "GET",
             "statut" => 200,
-            "path" => "/catalog"
+            "path" => "/catalogue"
         ]
     ]
 )]

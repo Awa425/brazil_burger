@@ -20,7 +20,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     collectionOperations: [
-        'get',
+        "get" => [
+            "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            "security_message" => "Vous n'avez pas access à cette Ressource",
+        ],
         'post',
         'VALIDMAIL' => [
             'method' => 'PATCH',
