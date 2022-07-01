@@ -32,10 +32,14 @@ class Menu extends Produit
     #[ORM\ManyToMany(targetEntity: Fritte::class, inversedBy: 'menus')]
     private $fritte;
 
+    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'menu')]
+    private $tailleBoissons;
+
     public function __construct()
     {
         $this->burgers = new ArrayCollection();
         $this->fritte = new ArrayCollection();
+        $this->tailleBoissons = new ArrayCollection();
     }
 
 
@@ -98,6 +102,33 @@ class Menu extends Produit
     public function removeFritte(Fritte $fritte): self
     {
         $this->fritte->removeElement($fritte);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TailleBoisson>
+     */
+    public function getTailleBoissons(): Collection
+    {
+        return $this->tailleBoissons;
+    }
+
+    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        if (!$this->tailleBoissons->contains($tailleBoisson)) {
+            $this->tailleBoissons[] = $tailleBoisson;
+            $tailleBoisson->addMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        if ($this->tailleBoissons->removeElement($tailleBoisson)) {
+            $tailleBoisson->removeMenu($this);
+        }
 
         return $this;
     }

@@ -2,22 +2,47 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\BoissonRepository;
+use App\Repository\TailleRepository;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Entity(repositoryClass: BoissonRepository::class)]
+#[ORM\Entity(repositoryClass: TailleRepository::class)]
 #[ApiResource()]
-class Boisson extends Produit
+class Taille
 {
-    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: TailleBoisson::class)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $nom;
+
+    #[ORM\OneToMany(mappedBy: 'taille', targetEntity: TailleBoisson::class)]
     private $tailleBoissons;
 
     public function __construct()
     {
         $this->tailleBoissons = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
     }
 
     /**
@@ -32,7 +57,7 @@ class Boisson extends Produit
     {
         if (!$this->tailleBoissons->contains($tailleBoisson)) {
             $this->tailleBoissons[] = $tailleBoisson;
-            $tailleBoisson->setBoisson($this);
+            $tailleBoisson->setTaille($this);
         }
 
         return $this;
@@ -42,8 +67,8 @@ class Boisson extends Produit
     {
         if ($this->tailleBoissons->removeElement($tailleBoisson)) {
             // set the owning side to null (unless already changed)
-            if ($tailleBoisson->getBoisson() === $this) {
-                $tailleBoisson->setBoisson(null);
+            if ($tailleBoisson->getTaille() === $this) {
+                $tailleBoisson->setTaille(null);
             }
         }
 
