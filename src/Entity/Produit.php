@@ -25,10 +25,10 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["simple", "all"])]
+    // #[Groups(["simple", "all"])]
     protected $id;
 
-    #[Groups(["simple", "all"])]
+    // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected $nom;
 
@@ -40,12 +40,12 @@ class Produit
     #[ORM\Column(type: 'float', nullable: true)]
     protected $prix;
 
-    #[Groups(["simple", "all"])]
+    // #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $image;
+    protected $image;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $etat = true;
+    protected $etat = true;
 
     public function getId(): ?int
     {
