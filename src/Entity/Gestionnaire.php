@@ -22,11 +22,15 @@ class Gestionnaire extends User
     #[ApiSubresource]
     private $burgers;
 
+    #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Livreur::class)]
+    private $livreur;
+
     public function __construct()
     {
         parent::__construct();
         $this->menus = new ArrayCollection();
         $this->burgers = new ArrayCollection();
+        $this->livreur = new ArrayCollection();
     }
 
     /**
@@ -83,6 +87,36 @@ class Gestionnaire extends User
             // set the owning side to null (unless already changed)
             if ($burger->getGestionnaire() === $this) {
                 $burger->setGestionnaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Livreur>
+     */
+    public function getLivreur(): Collection
+    {
+        return $this->livreur;
+    }
+
+    public function addLivreur(Livreur $livreur): self
+    {
+        if (!$this->livreur->contains($livreur)) {
+            $this->livreur[] = $livreur;
+            $livreur->setGestionnaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivreur(Livreur $livreur): self
+    {
+        if ($this->livreur->removeElement($livreur)) {
+            // set the owning side to null (unless already changed)
+            if ($livreur->getGestionnaire() === $this) {
+                $livreur->setGestionnaire(null);
             }
         }
 

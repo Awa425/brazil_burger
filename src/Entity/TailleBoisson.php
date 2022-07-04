@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TailleBoissonRepository;
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\TailleBoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TailleBoissonRepository::class)]
 #[ApiResource()]
@@ -17,7 +17,7 @@ class TailleBoisson
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Taille::class, inversedBy: 'tailleBoissons')]
@@ -26,12 +26,12 @@ class TailleBoisson
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boisson;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'tailleBoissons')]
-    private $menu;
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'tailleBoisson')]
+    private $menus;
 
     public function __construct()
     {
-        $this->menu = new ArrayCollection();
+        $this->menus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -39,12 +39,12 @@ class TailleBoisson
         return $this->id;
     }
 
-    public function getPrix(): ?int
+    public function getPrix(): ?string
     {
         return $this->prix;
     }
 
-    public function setPrix(?int $prix): self
+    public function setPrix(?string $prix): self
     {
         $this->prix = $prix;
 
@@ -78,15 +78,16 @@ class TailleBoisson
     /**
      * @return Collection<int, Menu>
      */
-    public function getMenu(): Collection
+    public function getMenus(): Collection
     {
-        return $this->menu;
+        return $this->menus;
     }
 
     public function addMenu(Menu $menu): self
     {
-        if (!$this->menu->contains($menu)) {
-            $this->menu[] = $menu;
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+            $menu->addTailleBoisson($this);
         }
 
         return $this;
@@ -94,7 +95,9 @@ class TailleBoisson
 
     public function removeMenu(Menu $menu): self
     {
-        $this->menu->removeElement($menu);
+        if ($this->menus->removeElement($menu)) {
+            $menu->removeTailleBoisson($this);
+        }
 
         return $this;
     }

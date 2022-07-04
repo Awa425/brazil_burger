@@ -15,7 +15,7 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["menu_all"])]
+    // #[Groups(["menu_all"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]

@@ -12,12 +12,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
     collectionOperations: [
+        "get",
         "post" => [
-            'normalization_context' => ['groups' => ['menu_all']],
-            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
-            // "security_message" => "Vous n'avez pas access à cette Ressource",
+            // 'normalization_context' => ['groups' => ['menu_all']],
+            "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
-    ]
+    ]    
 )]
 class Menu extends Produit
 {
@@ -26,20 +27,19 @@ class Menu extends Produit
     private $burgers;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
-    #[Groups(["menu_all"])]
     private $gestionnaire;
 
     #[ORM\ManyToMany(targetEntity: Fritte::class, inversedBy: 'menus')]
     private $fritte;
 
-    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, mappedBy: 'menu')]
-    private $tailleBoissons;
+    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, inversedBy: 'menus')]
+    private $tailleBoisson;
 
     public function __construct()
     {
         $this->burgers = new ArrayCollection();
         $this->fritte = new ArrayCollection();
-        $this->tailleBoissons = new ArrayCollection();
+        $this->tailleBoisson = new ArrayCollection();
     }
 
 
@@ -109,16 +109,15 @@ class Menu extends Produit
     /**
      * @return Collection<int, TailleBoisson>
      */
-    public function getTailleBoissons(): Collection
+    public function getTailleBoisson(): Collection
     {
-        return $this->tailleBoissons;
+        return $this->tailleBoisson;
     }
 
     public function addTailleBoisson(TailleBoisson $tailleBoisson): self
     {
-        if (!$this->tailleBoissons->contains($tailleBoisson)) {
-            $this->tailleBoissons[] = $tailleBoisson;
-            $tailleBoisson->addMenu($this);
+        if (!$this->tailleBoisson->contains($tailleBoisson)) {
+            $this->tailleBoisson[] = $tailleBoisson;
         }
 
         return $this;
@@ -126,10 +125,10 @@ class Menu extends Produit
 
     public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
     {
-        if ($this->tailleBoissons->removeElement($tailleBoisson)) {
-            $tailleBoisson->removeMenu($this);
-        }
+        $this->tailleBoisson->removeElement($tailleBoisson);
 
         return $this;
     }
+
+
 }
