@@ -4,17 +4,19 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
+#[ApiFilter(SearchFilter::class, properties: ['prix' => 'exact'])] 
 #[ApiResource(
     collectionOperations: [
-        "get",
+        "get" ,
         "post" => [
-            // 'normalization_context' => ['groups' => ['menu_all']],
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
@@ -24,15 +26,18 @@ class Menu extends Produit
 {
 
     #[ORM\ManyToMany(targetEntity: Burger::class, mappedBy: 'menus')]
+    #[Groups(["menu_all"])]
     private $burgers;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
     private $gestionnaire;
 
     #[ORM\ManyToMany(targetEntity: Fritte::class, inversedBy: 'menus')]
+    // #[Groups(["menu_all"])]
     private $fritte;
 
     #[ORM\ManyToMany(targetEntity: TailleBoisson::class, inversedBy: 'menus')]
+    // #[Groups(["menu_all"])]
     private $tailleBoisson;
 
     public function __construct()
@@ -57,7 +62,6 @@ class Menu extends Produit
             $this->burgers[] = $burger;
             $burger->addMenu($this);
         }
-
         return $this;
     }
 
@@ -130,5 +134,29 @@ class Menu extends Produit
         return $this;
     }
 
+    public function findPrixBurger(){
+        $prix=0;
+        $burgers=$this->getBurgers();
+        foreach ($burgers as $burger) {
+            $prix+=$burger->getPrix();
+        }
+        return $prix;
+    }
 
+    public function findPrixFritte(){
+        $prix=0;
+        $frittes=$this->getFritte();
+        foreach ($frittes as $fritte) {
+            $prix+=$fritte->getPrix();
+        }
+        return $prix;
+    }
+    public function findPrixBoisson(){
+        $prix=0;
+        $boissons=$this->getTailleBoisson();
+        foreach ($boissons as $boisson) {
+            $prix+=$boisson->getPrix();
+        }
+        return $prix;
+    }
 }

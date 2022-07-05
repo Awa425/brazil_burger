@@ -39,6 +39,34 @@ class MenuRepository extends ServiceEntityRepository
         }
     }
 
+    public function findPrixBurger($menu){
+        $prix=0;
+        $burgers=$menu->getBurgers();
+        foreach ($burgers as $burger) {
+            $prix+=$burger->getPrix();
+        }
+        return $prix;
+    }
+
+    public function findPrixFritte($menu){
+        $prix=0;
+        $frittes=$menu->getFritte();
+        foreach ($frittes as $fritte) {
+            $prix+=$fritte->getPrix();
+        }
+        return $prix;
+    }
+    public function findPrixBoisson($menu){
+        $prix=0;
+        $boissons=$menu->getTailleBoisson();
+        foreach ($boissons as $boisson) {
+            $prix+=$boisson->getPrix();
+        }
+        return $prix;
+    }
+
+
+
 //    /**
 //     * @return Menu[] Returns an array of Menu objects
 //     */

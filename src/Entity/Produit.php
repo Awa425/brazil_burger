@@ -25,26 +25,28 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    // #[Groups(["simple", "all"])]
+    #[Groups(["burger:read"])]
     protected $id;
 
     // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(["burger:read"])]
     protected $nom;
 
 
     // #[ORM\Column(type: 'string', length: 50, nullable: true)]
     // protected $type;
 
-    #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(["burger:read"])]
     protected $prix;
 
-    // #[Groups(["simple", "all"])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(["burger:read"])]
     protected $image;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(["burger:read"])]
     protected $etat = true;
 
     public function getId(): ?int

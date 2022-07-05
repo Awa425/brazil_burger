@@ -18,7 +18,7 @@ class CatalogDataProvider implements ContextAwareCollectionDataProviderInterface
     }
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
-    {
+    {   
         $tab[] = $this->repoBurger->findBy(["etat" => true]);
         $tab[] = $this->repoMenu->findBy(["etat" => true]);
         return $tab;
