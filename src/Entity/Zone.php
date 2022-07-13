@@ -26,6 +26,9 @@ class Zone
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
     private $quartiers;
 
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private $nom_zone;
+
     public function __construct()
     {
         $this->commande = new ArrayCollection();
@@ -105,6 +108,18 @@ class Zone
                 $quartier->setZone(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNomZone(): ?string
+    {
+        return $this->nom_zone;
+    }
+
+    public function setNomZone(?string $nom_zone): self
+    {
+        $this->nom_zone = $nom_zone;
 
         return $this;
     }

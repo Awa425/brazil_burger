@@ -19,23 +19,29 @@ class TailleBoisson
     private $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(["menu_all"])]
+    // #[Groups(["menu_all"])]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Taille::class, inversedBy: 'tailleBoissons')]
-    #[Groups(["menu_all"])]
+    // #[Groups(["menu_all"])]
     private $taille;
 
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boisson;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'tailleBoisson')]
-    private $menus;
+    #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: TailleBoissonMenu::class)]
+    private $tailleBoissonMenus;
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
+        $this->tailleBoissonMenus = new ArrayCollection();
     }
+
+  
+
+
+
+   
 
     public function getId(): ?int
     {
@@ -79,29 +85,33 @@ class TailleBoisson
     }
 
     /**
-     * @return Collection<int, Menu>
+     * @return Collection<int, TailleBoissonMenu>
      */
-    public function getMenus(): Collection
+    public function getTailleBoissonMenus(): Collection
     {
-        return $this->menus;
+        return $this->tailleBoissonMenus;
     }
 
-    public function addMenu(Menu $menu): self
+    public function addTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addTailleBoisson($this);
+        if (!$this->tailleBoissonMenus->contains($tailleBoissonMenu)) {
+            $this->tailleBoissonMenus[] = $tailleBoissonMenu;
+            $tailleBoissonMenu->setTailleBoisson($this);
         }
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    public function removeTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
     {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeTailleBoisson($this);
+        if ($this->tailleBoissonMenus->removeElement($tailleBoissonMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($tailleBoissonMenu->getTailleBoisson() === $this) {
+                $tailleBoissonMenu->setTailleBoisson(null);
+            }
         }
 
         return $this;
     }
+
 }

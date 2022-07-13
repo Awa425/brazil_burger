@@ -32,10 +32,10 @@
 
 # Notion de Normalisation (Object vers Array)
 * Sur l'entité :
-`NB: La Normalisation permet de définir le format de la donnee de la réponse avec la notion de Groups.`
-`Lors de l'opération GET(ALL) si on veut cacher certaines informations,c'est moment de la normalisation qu'on agit`
+`NB: La Normalisation permet de définir le format de donnee de la réponse avec la notion de Groups.`
+`Lors de l'opération GET(ALL) si on veut cacher certaines informations,c'est moment de la normalisation qu'on agit . Donc elle nous permet d' afficher ce qu'on veut afficher lorsqu' on recupere l'objet.`
 
-# Notion de Deormalisation (Array vers Object)
+# Notion de Denormalisation (Array vers Object)
 * Sur l'entité :
 `NB: La Normalisation permet de définir le format de la donnee de la réponse avec la notion de Groups.`
 
@@ -44,3 +44,36 @@
 
 # EventSubscriber:
 ` C'est un ecouteur d'événement qui permet d'intercepepter une requete et de faire un traitement lorsque l'événement se réalise`
+
+# Validation email
+`#[Assert\Email(message: "Le mail '{{ value }}' est invalide.")]`
+
+# Pour filtrer par recherche
+* Sur l'entite
+`#[ApiFilter(SearchFilter::class, properties: ['attribut 1' => 'exact', 'attribut 2' => 'exact', 'attribut 3' => 'partial'])] `
+
+# Uploader Image 
+* Sur l'entite: 
+ itemOperations: [
+        'image' => [
+            'method' => 'POST',
+            'path' => '/frittes/{id}/image',
+            'deserialize' => false,
+            'controller' => PostImageController::class
+        ]
+    ]
+* Dans le controller personnalise, on met :
+`  public function __invoke(Request $request)
+    {
+        $fritte = $request->attributes->get('data');
+        $file = $request->files->get('file');
+        dd($file, $fritte);
+        
+    }`
+
+# Notion de dependance ORM doctrine: 
+` Ca permet au developpeur de se concentrer sur le coeur du metier c a d sur la logique, la use case, on a plus besoin de savoir comment on insert les donnees. Il ya toujours ce qu' on appel le code metier et le code technique, et c'est le code metier qui change d'une application a un autre, c'est les fonctionnalite qu'on realise nous meme alors que le code technique en generale c'est la partie securite et ca ne change d'une appli a autre comme l' envoie des mails, ou ajout dans la bdd... Les HUB de dependance (en php c'est le packegiste, en java c'es Maven) . Donc les dependances permet`
+
+# Gestionnaire de Dependance
+` C'est un outils que l' on installe, avant les outils, a chaque fois qu' on voulait utiliser une dependance on le telecharger, ajouter ds le projet et le configurer mais maintenent c' est ces outils qui joue ce role, il permet de telecharger les dependances, l'ajouter ds le projet le configurer et gerer les conflits entre les dependances.`
+` `

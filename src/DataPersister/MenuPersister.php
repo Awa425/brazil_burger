@@ -17,15 +17,17 @@ class MenuPersister implements ContextAwareDataPersisterInterface{
     }
 
     public function supports($data, array $context = []):bool{
-        return $data instanceof Menu;
+        // return $data instanceof Menu;
+        return 0;
         
     }
     public function persist($data, array $context = []){
-        $pourcentage = 0.05;
-        $prix = ($data->findPrixBurger()+ $data->findPrixFritte()+ $data->findPrixBoisson());
-        $data->setPrix($prix);
-        $this->entityManager->persist($data);
-        $this->entityManager->flush();
+        // dd($data->getNombreBurgers());
+        // $pourcentage = 0.05;
+        // $prix = ($data->findPrixBurger()+ $data->findPrixFritte()+ $data->findPrixBoisson());
+        // $data->setPrix($prix);
+        // $this->entityManager->persist($data);
+        // $this->entityManager->flush();
 
 
     }

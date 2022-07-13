@@ -3,7 +3,9 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Burger;
+use App\Entity\Commande;
 use App\Entity\Fritte;
+use App\Entity\Livraison;
 use App\Entity\Menu;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -47,7 +49,47 @@ class GestionnaireSubscriber implements EventSubscriberInterface
             $args->getObject()->setGestionnaire($this->getUser());
         }
         if ($args->getObject() instanceof Menu) {
-            $args->getObject()->setGestionnaire($this->getUser());
+            if(count($args->getObject()->getburgerMenus())!=0){
+                $args->getObject()->setGestionnaire($this->getUser());
+                $args->getObject()->setPrix($args->getObject()->findPrixMenu($args->getObject())); 
+            }
+            else{
+                dd('veuillez entrer au moins un burger');
+            }
+        }
+
+        if ($args->getObject() instanceof Commande) {
+            // if(count($args->getObject()->getLigneCommandes())!=0){
+                $cpt = 0;
+                $prix = 0;
+                foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
+                    if($ligneCommande->getProduit() instanceof Burger or $ligneCommande->getProduit() instanceof Menu){
+                        $cpt = 1;
+                    }
+                } 
+                if($cpt == 1){ 
+                    foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
+                        $prix += $ligneCommande->getProduit()->getPrix() * $ligneCommande->getQuanite();  
+                    }
+                    $prix = $prix + $args->getObject()->getZone()->getPrixLivraison();
+                    $args->getObject()->setPrix($prix); 
+                }
+                else
+                dd('veuillez entrer au moins un burger');
+            // }
+        }
+
+        if ($args->getObject() instanceof Livraison) {
+            $test = 1;
+            $zoneRef = $args->getObject()->getCommande()[0]->getZone()->getNomZone();
+            foreach($args->getObject()->getCommande() as $commande){
+                if($zoneRef != $commande->getZone()->getNomZone()){
+                    $test = 0;
+                }
+            }
+            if($test==0){
+                dd("Les livraison doivent se faire dans une meme zone");
+            }
         }
     }
 }

@@ -18,21 +18,21 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     collectionOperations: [
         "get" => [
             'method' => 'get',
-            'normalization_context' => ['groups' => ['burger:read']],
+            // 'normalization_context' => ['groups' => ['burger:read']],
             'status' => Response::HTTP_OK,
         ],
         "post" => [
             // 'denormalization_context' => ['groups' => ['write']],
             // 'normalization_context' => ['groups' => ['all']],
-            "security" => "is_granted('ROLE_GESTIONNAIRE')",
-            "security_message" => "Vous n'avez pas access à cette Ressource",
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
     ],
     itemOperations: [
         "get" => [
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['all']],
+            // 'method' => 'get',
+            // 'status' => Response::HTTP_OK,
+            // 'normalization_context' => ['groups' => ['all']],
         ],
         "put" => [
             'method' => 'put',
@@ -45,37 +45,22 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 class Burger extends Produit
 {
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
-    private $menus;
+    // #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
+    // private $menus;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
     private $gestionnaire;
 
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: BurgerMenu::class)]
+    private $burgerMenus;
+
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
+        $this->burgerMenus = new ArrayCollection();
     }
 
-     /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-        }
-        return $this;
-    }
-    public function removeMenu(Menu $menu): self
-    {
-        $this->menus->removeElement($menu);
 
-        return $this;
-    }
+
 
     public function getGestionnaire(): ?Gestionnaire
     {
@@ -85,6 +70,36 @@ class Burger extends Produit
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BurgerMenu>
+     */
+    public function getBurgerMenus(): Collection
+    {
+        return $this->burgerMenus;
+    }
+
+    public function addBurgerMenu(BurgerMenu $burgerMenu): self
+    {
+        if (!$this->burgerMenus->contains($burgerMenu)) {
+            $this->burgerMenus[] = $burgerMenu;
+            $burgerMenu->setBurger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBurgerMenu(BurgerMenu $burgerMenu): self
+    {
+        if ($this->burgerMenus->removeElement($burgerMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($burgerMenu->getBurger() === $this) {
+                $burgerMenu->setBurger(null);
+            }
+        }
 
         return $this;
     }

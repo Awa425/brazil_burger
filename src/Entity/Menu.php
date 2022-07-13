@@ -7,9 +7,12 @@ use App\Repository\MenuRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiFilter(SearchFilter::class, properties: ['prix' => 'exact'])] 
@@ -17,6 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     collectionOperations: [
         "get" ,
         "post" => [
+            // 'normalization_context' => ['groups' => ['menu:read']],
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
@@ -25,54 +29,32 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 class Menu extends Produit
 {
 
-    #[ORM\ManyToMany(targetEntity: Burger::class, mappedBy: 'menus')]
-    #[Groups(["menu_all"])]
-    private $burgers;
-
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
     private $gestionnaire;
 
-    #[ORM\ManyToMany(targetEntity: Fritte::class, inversedBy: 'menus')]
-    // #[Groups(["menu_all"])]
-    private $fritte;
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: FritteMenu::class, cascade:["persist"])]
+    #[SerializedName('Fritte')]
+    private $fritteMenus;
 
-    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, inversedBy: 'menus')]
-    // #[Groups(["menu_all"])]
-    private $tailleBoisson;
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: TailleBoissonMenu::class, cascade:["persist"])]
+    #[SerializedName('Boisson')]
+    private $tailleBoissonMenus;
+
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: BurgerMenu::class, cascade:["persist"])]
+    #[Assert\NotBlank(message: "Champs obligatoire.")]
+    #[SerializedName('Burger')]
+    private $burgerMenus;
+
+
 
     public function __construct()
     {
-        $this->burgers = new ArrayCollection();
-        $this->fritte = new ArrayCollection();
-        $this->tailleBoisson = new ArrayCollection();
+        // $this->burgers = new ArrayCollection();
+        $this->fritteMenus = new ArrayCollection();
+        $this->tailleBoissonMenus = new ArrayCollection();
+        $this->burgerMenus = new ArrayCollection();
     }
 
-
-    /**
-     * @return Collection<int, Burger>
-     */
-    public function getBurgers(): Collection
-    {
-        return $this->burgers;
-    }
-
-    public function addBurger(Burger $burger): self
-    {
-        if (!$this->burgers->contains($burger)) {
-            $this->burgers[] = $burger;
-            $burger->addMenu($this);
-        }
-        return $this;
-    }
-
-    public function removeBurger(Burger $burger): self
-    {
-        if ($this->burgers->removeElement($burger)) {
-            $burger->removeMenu($this);
-        }
-
-        return $this;
-    }
 
     public function getGestionnaire(): ?Gestionnaire
     {
@@ -86,77 +68,112 @@ class Menu extends Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Fritte>
-     */
-    public function getFritte(): Collection
-    {
-        return $this->fritte;
-    }
-
-    public function addFritte(Fritte $fritte): self
-    {
-        if (!$this->fritte->contains($fritte)) {
-            $this->fritte[] = $fritte;
+    public function findPrixMenu($data){
+        $prix = 0;
+        foreach($data->getTailleBoissonMenus() as $boisson){
+            $prix += $boisson->getTailleBoisson()->getPrix() * $boisson->getQuantite();  
         }
-
-        return $this;
+       
+        foreach($data->getFritteMenus() as $fritte){
+            $prix += $fritte->getFritte()->getPrix() * $fritte->getQuantite();  
+        } 
+        foreach($data->getBurgerMenus() as $burger){
+            $prix += $burger->getBurger()->getPrix() * $burger->getQuantite();  
+        }
+        return $prix;
     }
 
-    public function removeFritte(Fritte $fritte): self
-    {
-        $this->fritte->removeElement($fritte);
-
-        return $this;
-    }
+  
+   
+  
 
     /**
-     * @return Collection<int, TailleBoisson>
+     * @return Collection<int, FritteMenu>
      */
-    public function getTailleBoisson(): Collection
+    public function getFritteMenus(): Collection
     {
-        return $this->tailleBoisson;
+        return $this->fritteMenus;
     }
 
-    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
+    public function addFritteMenu(FritteMenu $fritteMenu): self
     {
-        if (!$this->tailleBoisson->contains($tailleBoisson)) {
-            $this->tailleBoisson[] = $tailleBoisson;
+        if (!$this->fritteMenus->contains($fritteMenu)) {
+            $this->fritteMenus[] = $fritteMenu;
+            $fritteMenu->setMenu($this);
         }
 
         return $this;
     }
 
-    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
+    public function removeFritteMenu(FritteMenu $fritteMenu): self
     {
-        $this->tailleBoisson->removeElement($tailleBoisson);
+        if ($this->fritteMenus->removeElement($fritteMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($fritteMenu->getMenu() === $this) {
+                $fritteMenu->setMenu(null);
+            }
+        }
 
         return $this;
     }
 
-    public function findPrixBurger(){
-        $prix=0;
-        $burgers=$this->getBurgers();
-        foreach ($burgers as $burger) {
-            $prix+=$burger->getPrix();
-        }
-        return $prix;
+    /**
+     * @return Collection<int, TailleBoissonMenu>
+     */
+    public function getTailleBoissonMenus(): Collection
+    {
+        return $this->tailleBoissonMenus;
     }
 
-    public function findPrixFritte(){
-        $prix=0;
-        $frittes=$this->getFritte();
-        foreach ($frittes as $fritte) {
-            $prix+=$fritte->getPrix();
+    public function addTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
+    {
+        if (!$this->tailleBoissonMenus->contains($tailleBoissonMenu)) {
+            $this->tailleBoissonMenus[] = $tailleBoissonMenu;
+            $tailleBoissonMenu->setMenu($this);
         }
-        return $prix;
+
+        return $this;
     }
-    public function findPrixBoisson(){
-        $prix=0;
-        $boissons=$this->getTailleBoisson();
-        foreach ($boissons as $boisson) {
-            $prix+=$boisson->getPrix();
+
+    public function removeTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
+    {
+        if ($this->tailleBoissonMenus->removeElement($tailleBoissonMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($tailleBoissonMenu->getMenu() === $this) {
+                $tailleBoissonMenu->setMenu(null);
+            }
         }
-        return $prix;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BurgerMenu>
+     */
+    public function getBurgerMenus(): Collection
+    {
+        return $this->burgerMenus;
+    }
+
+    public function addBurgerMenu(BurgerMenu $burgerMenu): self
+    {
+        if (!$this->burgerMenus->contains($burgerMenu)) {
+            $this->burgerMenus[] = $burgerMenu;
+            $burgerMenu->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBurgerMenu(BurgerMenu $burgerMenu): self
+    {
+        if ($this->burgerMenus->removeElement($burgerMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($burgerMenu->getMenu() === $this) {
+                $burgerMenu->setMenu(null);
+            }
+        }
+
+        return $this;
     }
 }

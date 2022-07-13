@@ -53,3 +53,7 @@
 
 # Configuration des entités:
 `Ajouter l’annotation` #[ApiResource()] `sur chaque entité gérée par Api PlatForm.`
+
+# Probleme de cache:
+`Par exemple si on normalise et qu'on obtient pas ce qu'on veut, en general  on met cette commande`
+` bin/console cache:clear  `

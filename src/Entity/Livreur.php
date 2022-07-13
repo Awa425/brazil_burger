@@ -13,7 +13,6 @@ use App\Repository\LivreurRepository;
 #[ApiResource()]
 class Livreur extends User
 {
-
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $telephone;
 

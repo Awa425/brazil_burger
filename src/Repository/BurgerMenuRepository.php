@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Burger;
+use App\Entity\BurgerMenu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Burger>
+ * @extends ServiceEntityRepository<BurgerMenu>
  *
- * @method Burger|null find($id, $lockMode = null, $lockVersion = null)
- * @method Burger|null findOneBy(array $criteria, array $orderBy = null)
- * @method Burger[]    findAll()
- * @method Burger[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method BurgerMenu|null find($id, $lockMode = null, $lockVersion = null)
+ * @method BurgerMenu|null findOneBy(array $criteria, array $orderBy = null)
+ * @method BurgerMenu[]    findAll()
+ * @method BurgerMenu[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BurgerRepository extends ServiceEntityRepository
+class BurgerMenuRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Burger::class);
+        parent::__construct($registry, BurgerMenu::class);
     }
 
-    public function add(Burger $entity, bool $flush = false): void
+    public function add(BurgerMenu $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class BurgerRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Burger $entity, bool $flush = false): void
+    public function remove(BurgerMenu $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,10 +39,8 @@ class BurgerRepository extends ServiceEntityRepository
         }
     }
 
-   
-
 //    /**
-//     * @return Burger[] Returns an array of Burger objects
+//     * @return BurgerMenu[] Returns an array of BurgerMenu objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -56,7 +54,7 @@ class BurgerRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Burger
+//    public function findOneBySomeField($value): ?BurgerMenu
 //    {
 //        return $this->createQueryBuilder('b')
 //            ->andWhere('b.exampleField = :val')
