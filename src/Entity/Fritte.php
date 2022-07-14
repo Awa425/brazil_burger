@@ -13,9 +13,6 @@ use App\Controller\PostImageController;
 #[ApiResource()]
 class Fritte extends Produit
 {
-
-  
-
     #[ORM\OneToMany(mappedBy: 'fritte', targetEntity: FritteMenu::class)]
     private $fritteMenus;
 

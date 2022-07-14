@@ -59,7 +59,6 @@ class GestionnaireSubscriber implements EventSubscriberInterface
         }
 
         if ($args->getObject() instanceof Commande) {
-            // if(count($args->getObject()->getLigneCommandes())!=0){
                 $cpt = 0;
                 $prix = 0;
                 foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
@@ -76,7 +75,6 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                 }
                 else
                 dd('veuillez entrer au moins un burger');
-            // }
         }
 
         if ($args->getObject() instanceof Livraison) {

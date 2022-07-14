@@ -29,7 +29,7 @@ class Commande
     private $livraison;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commande')]
-    #[Groups(['read:commande'])]
+    #[Groups(['read:commande'])] 
     private $zone;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
@@ -41,9 +41,6 @@ class Commande
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class, cascade:["persist"])]
     #[Groups(['read:commande'])]
     private $ligneCommandes;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $prix;
 
     public function __construct()
     {
@@ -147,18 +144,6 @@ class Commande
             $prix += $burger->getBurger()->getPrix() * $burger->getQuantite();  
         }
         return $prix;
-    }
-
-    public function getPrix(): ?int
-    {
-        return $this->prix;
-    }
-
-    public function setPrix(?int $prix): self
-    {
-        $this->prix = $prix;
-
-        return $this;
     }
    
 }
