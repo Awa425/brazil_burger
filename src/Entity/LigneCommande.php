@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LigneCommandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -24,6 +26,14 @@ class LigneCommande
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
     #[Groups(['read:commande'])]
     private $produit;
+
+    #[ORM\OneToMany(mappedBy: 'ligneCommande', targetEntity: LignecommandeTailleboisson::class, cascade:["persist"])]
+    private $lignecommandeTailleboissons;
+
+    public function __construct()
+    {
+        $this->lignecommandeTailleboissons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -65,4 +75,36 @@ class LigneCommande
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, LignecommandeTailleboisson>
+     */
+    public function getLignecommandeTailleboissons(): Collection
+    {
+        return $this->lignecommandeTailleboissons;
+    }
+
+    public function addLignecommandeTailleboisson(LignecommandeTailleboisson $lignecommandeTailleboisson): self
+    {
+        if (!$this->lignecommandeTailleboissons->contains($lignecommandeTailleboisson)) {
+            $this->lignecommandeTailleboissons[] = $lignecommandeTailleboisson;
+            $lignecommandeTailleboisson->setLigneCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLignecommandeTailleboisson(LignecommandeTailleboisson $lignecommandeTailleboisson): self
+    {
+        if ($this->lignecommandeTailleboissons->removeElement($lignecommandeTailleboisson)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandeTailleboisson->getLigneCommande() === $this) {
+                $lignecommandeTailleboisson->setLigneCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

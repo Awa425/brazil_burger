@@ -18,11 +18,11 @@ class FritteMenu
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Fritte::class, inversedBy: 'fritteMenus')]
-    #[Groups('menu:read')]
+    #[Groups(['menu:read'])]
     private $fritte;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups('menu:read')]
+    #[Groups(['menu:read'])]
     private $quantite;
 
     public function getId(): ?int

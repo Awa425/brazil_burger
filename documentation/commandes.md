@@ -57,3 +57,7 @@
 # Probleme de cache:
 `Par exemple si on normalise et qu'on obtient pas ce qu'on veut, en general  on met cette commande`
 ` bin/console cache:clear  `
+
+# Probleme cascade
+* Dans l'annotation de l'entite
+` cascade:["persist"]`

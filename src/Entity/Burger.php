@@ -17,13 +17,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource(
     collectionOperations: [
         "get" => [
-            'method' => 'get',
-            // 'normalization_context' => ['groups' => ['burger:read']],
+            'normalization_context' => ['groups' => ['burger:read']],
             'status' => Response::HTTP_OK,
         ],
         "post" => [
             // 'denormalization_context' => ['groups' => ['write']],
-            // 'normalization_context' => ['groups' => ['all']],
             // "security" => "is_granted('ROLE_GESTIONNAIRE')",
             // "security_message" => "Vous n'avez pas access à cette Ressource",
         ]

@@ -18,9 +18,9 @@ class TailleBoisson
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    // #[Groups(["menu_all"])]
-    private $prix;
+    // #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    // // #[Groups(["menu_all"])]
+    // private $prix;
 
     #[ORM\ManyToOne(targetEntity: Taille::class, inversedBy: 'tailleBoissons')]
     // #[Groups(["menu_all"])]
@@ -29,15 +29,18 @@ class TailleBoisson
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boisson;
 
-    #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: TailleBoissonMenu::class)]
-    private $tailleBoissonMenus;
+    // #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: TailleBoissonMenu::class)]
+    // private $tailleBoissonMenus;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private $stock;
 
+    #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: LignecommandeTailleboisson::class)]
+    private $lignecommandeTailleboissons;
+
     public function __construct()
     {
-        $this->tailleBoissonMenus = new ArrayCollection();
+        $this->lignecommandeTailleboissons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -45,17 +48,7 @@ class TailleBoisson
         return $this->id;
     }
 
-    public function getPrix(): ?string
-    {
-        return $this->prix;
-    }
-
-    public function setPrix(?string $prix): self
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
+  
 
     public function getTaille(): ?Taille
     {
@@ -81,36 +74,6 @@ class TailleBoisson
         return $this;
     }
 
-    /**
-     * @return Collection<int, TailleBoissonMenu>
-     */
-    public function getTailleBoissonMenus(): Collection
-    {
-        return $this->tailleBoissonMenus;
-    }
-
-    public function addTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
-    {
-        if (!$this->tailleBoissonMenus->contains($tailleBoissonMenu)) {
-            $this->tailleBoissonMenus[] = $tailleBoissonMenu;
-            $tailleBoissonMenu->setTailleBoisson($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
-    {
-        if ($this->tailleBoissonMenus->removeElement($tailleBoissonMenu)) {
-            // set the owning side to null (unless already changed)
-            if ($tailleBoissonMenu->getTailleBoisson() === $this) {
-                $tailleBoissonMenu->setTailleBoisson(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getStock(): ?int
     {
         return $this->stock;
@@ -119,6 +82,36 @@ class TailleBoisson
     public function setStock(?int $stock): self
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LignecommandeTailleboisson>
+     */
+    public function getLignecommandeTailleboissons(): Collection
+    {
+        return $this->lignecommandeTailleboissons;
+    }
+
+    public function addLignecommandeTailleboisson(LignecommandeTailleboisson $lignecommandeTailleboisson): self
+    {
+        if (!$this->lignecommandeTailleboissons->contains($lignecommandeTailleboisson)) {
+            $this->lignecommandeTailleboissons[] = $lignecommandeTailleboisson;
+            $lignecommandeTailleboisson->setTailleBoisson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLignecommandeTailleboisson(LignecommandeTailleboisson $lignecommandeTailleboisson): self
+    {
+        if ($this->lignecommandeTailleboissons->removeElement($lignecommandeTailleboisson)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandeTailleboisson->getTailleBoisson() === $this) {
+                $lignecommandeTailleboisson->setTailleBoisson(null);
+            }
+        }
 
         return $this;
     }

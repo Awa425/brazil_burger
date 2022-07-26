@@ -42,6 +42,9 @@ class Commande
     #[Groups(['read:commande'])]
     private $ligneCommandes;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $prix;
+
     public function __construct()
     {
         $this->ligneCommandes = new ArrayCollection();
@@ -133,9 +136,9 @@ class Commande
 
     public function findPrixCommande($data){
         $prix = 0;
-        foreach($data->getTailleBoissonMenus() as $boisson){
-            $prix += $boisson->getTailleBoisson()->getPrix() * $boisson->getQuantite();  
-        }
+        // foreach($data->getTailleBoissonMenus() as $boisson){
+        //     $prix += $boisson->getTailleBoisson()->getPrix() * $boisson->getQuantite();  
+        // }
        
         foreach($data->getFritteMenus() as $fritte){
             $prix += $fritte->getFritte()->getPrix() * $fritte->getQuantite();  
@@ -144,6 +147,18 @@ class Commande
             $prix += $burger->getBurger()->getPrix() * $burger->getQuantite();  
         }
         return $prix;
+    }
+
+    public function getPrix(): ?int
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?int $prix): self
+    {
+        $this->prix = $prix;
+
+        return $this;
     }
    
 }

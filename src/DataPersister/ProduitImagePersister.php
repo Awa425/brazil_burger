@@ -22,6 +22,7 @@ class ProduitImagePersister implements ContextAwareDataPersisterInterface{
         $data->setImage(file_get_contents($data->getPathFile()));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+
     }
 
     public function remove($data, array $context = []){

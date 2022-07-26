@@ -10,7 +10,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
         "get" => [
             "method" => "GET",
             "statut" => 200,
-            "path" => "/catalogue"
+            "path" => "/catalogue",
+            'normalization_context' => ['groups' => ['catalogue:read']],
+
         ]
     ]
 )]

@@ -48,7 +48,8 @@ class GestionnaireSubscriber implements EventSubscriberInterface
         if ($args->getObject() instanceof Burger) {
             $args->getObject()->setGestionnaire($this->getUser());
         }
-        if ($args->getObject() instanceof Menu) {
+        if ($args->getObject() instanceof Menu) { 
+            // dd($args->getObject()->getMenuTailles()[0]->getQuantite());
             if(count($args->getObject()->getburgerMenus())!=0){
                 $args->getObject()->setGestionnaire($this->getUser());
                 $args->getObject()->setPrix($args->getObject()->findPrixMenu($args->getObject())); 
@@ -69,10 +70,18 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                 if($cpt == 1){ 
                     foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
                         $prix += $ligneCommande->getProduit()->getPrix() * $ligneCommande->getQuanite();  
+                    }  
+                    foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
+                        $prix += $ligneCommande->getProduit()->getPrix() * $ligneCommande->getQuanite();  
+                    }  
+                    foreach($args->getObject()->getLigneCommandes() as $ligneCommande){
+                        foreach ($ligneCommande->getLignecommandeTailleboissons() as $boisson) {
+                            $prix += $boisson->getTailleBoisson()->getTaille()->getPrix() * $boisson->getQuantite();  
+                        }
                     }
-                    $prix = $prix + $args->getObject()->getZone()->getPrixLivraison();
-                    $args->getObject()->setPrix($prix); 
-                }
+                    // dd($args->getObject());
+                    // $args->getObject()->setPrix($prix); 
+                } 
                 else
                 dd('veuillez entrer au moins un burger');
         }

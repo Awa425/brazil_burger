@@ -18,9 +18,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ApiFilter(SearchFilter::class, properties: ['prix' => 'exact'])] 
 #[ApiResource(
     collectionOperations: [
-        "get" ,
+        "get" =>[
+            'normalization_context' => ['groups' => ['menu:read']],
+        ],
         "post" => [
-            // 'normalization_context' => ['groups' => ['menu:read']],
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
@@ -33,26 +34,28 @@ class Menu extends Produit
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: FritteMenu::class, cascade:["persist"])]
-    #[SerializedName('Fritte')]
+    // #[SerializedName('Fritte')]
+    #[Groups(['menu:read'])]
     private $fritteMenus;
-
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: TailleBoissonMenu::class, cascade:["persist"])]
-    #[SerializedName('Boisson')]
-    private $tailleBoissonMenus;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: BurgerMenu::class, cascade:["persist"])]
     #[Assert\NotBlank(message: "Champs obligatoire.")]
-    #[SerializedName('Burger')]
+    // #[SerializedName('Burger')]
+    #[Groups(['menu:read'])]
     private $burgerMenus;
+
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class, cascade:["persist"])]
+    #[Groups(['menu:read'])]
+    // #[SerializedName('Boisson')]
+    private $menuTailles;
 
 
 
     public function __construct()
     {
-        // $this->burgers = new ArrayCollection();
         $this->fritteMenus = new ArrayCollection();
-        $this->tailleBoissonMenus = new ArrayCollection();
         $this->burgerMenus = new ArrayCollection();
+        $this->menuTailles = new ArrayCollection();
     }
 
 
@@ -70,8 +73,10 @@ class Menu extends Produit
 
     public function findPrixMenu($data){
         $prix = 0;
-        foreach($data->getTailleBoissonMenus() as $boisson){
-            $prix += $boisson->getTailleBoisson()->getPrix() * $boisson->getQuantite();  
+        // dd($args->getObject()->getMenuTailles()[0]->getTaille()->getPrix());
+
+        foreach($data->getMenuTailles() as $boisson){
+            $prix += $boisson->getTaille()->getPrix() * $boisson->getQuantite();  
         }
        
         foreach($data->getFritteMenus() as $fritte){
@@ -82,10 +87,6 @@ class Menu extends Produit
         }
         return $prix;
     }
-
-  
-   
-  
 
     /**
      * @return Collection<int, FritteMenu>
@@ -118,36 +119,6 @@ class Menu extends Produit
     }
 
     /**
-     * @return Collection<int, TailleBoissonMenu>
-     */
-    public function getTailleBoissonMenus(): Collection
-    {
-        return $this->tailleBoissonMenus;
-    }
-
-    public function addTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
-    {
-        if (!$this->tailleBoissonMenus->contains($tailleBoissonMenu)) {
-            $this->tailleBoissonMenus[] = $tailleBoissonMenu;
-            $tailleBoissonMenu->setMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTailleBoissonMenu(TailleBoissonMenu $tailleBoissonMenu): self
-    {
-        if ($this->tailleBoissonMenus->removeElement($tailleBoissonMenu)) {
-            // set the owning side to null (unless already changed)
-            if ($tailleBoissonMenu->getMenu() === $this) {
-                $tailleBoissonMenu->setMenu(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, BurgerMenu>
      */
     public function getBurgerMenus(): Collection
@@ -171,6 +142,36 @@ class Menu extends Produit
             // set the owning side to null (unless already changed)
             if ($burgerMenu->getMenu() === $this) {
                 $burgerMenu->setMenu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuTaille>
+     */
+    public function getMenuTailles(): Collection
+    {
+        return $this->menuTailles;
+    }
+
+    public function addMenuTaille(MenuTaille $menuTaille): self
+    {
+        if (!$this->menuTailles->contains($menuTaille)) {
+            $this->menuTailles[] = $menuTaille;
+            $menuTaille->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuTaille(MenuTaille $menuTaille): self
+    {
+        if ($this->menuTailles->removeElement($menuTaille)) {
+            // set the owning side to null (unless already changed)
+            if ($menuTaille->getMenu() === $this) {
+                $menuTaille->setMenu(null);
             }
         }
 

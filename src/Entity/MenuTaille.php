@@ -2,42 +2,29 @@
 
 namespace App\Entity;
 
-use App\Repository\TailleBoissonMenuRepository;
+use App\Repository\MenuTailleRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: TailleBoissonMenuRepository::class)]
-class TailleBoissonMenu
+#[ORM\Entity(repositoryClass: MenuTailleRepository::class)]
+class MenuTaille
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'tailleBoissonMenus')]
-    private $tailleBoisson;
-
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'tailleBoissonMenus')]
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles')]
     private $menu;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private $quantite;
 
+    #[ORM\ManyToOne(targetEntity: Taille::class, inversedBy: 'menuTailles')]
+    private $taille;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTailleBoisson(): ?TailleBoisson
-    {
-        return $this->tailleBoisson;
-    }
-
-    public function setTailleBoisson(?TailleBoisson $tailleBoisson): self
-    {
-        $this->tailleBoisson = $tailleBoisson;
-
-        return $this;
     }
 
     public function getMenu(): ?Menu
@@ -60,6 +47,18 @@ class TailleBoissonMenu
     public function setQuantite(?int $quantite): self
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getTaille(): ?Taille
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?Taille $taille): self
+    {
+        $this->taille = $taille;
 
         return $this;
     }

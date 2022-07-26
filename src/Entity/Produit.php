@@ -26,27 +26,27 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read"])]
+    #[Groups(["burger:read", 'menu:read' ,"catalogue:read"])]
     protected $id;
 
     // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(["burger:read"])]
+    #[Groups(["burger:read", "catalogue:read", 'menu:read'])]
     protected $nom;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(["burger:read"])]
+    #[Groups(["burger:read", "menu:read" ,"catalogue:read", 'menu:read'])]
     protected $prix;
 
     #[SerializedName('image')]
     protected $pathFile;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(["burger:read"])]
+    #[Groups(["burger:read", "menu:read", 'menu:read'])]
     protected $etat = true;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(["burger:read"])]
+    #[Groups(["burger:read", "catalogue:read", 'menu:read'])]
     private $image;
 
     public function getId(): ?int
@@ -112,7 +112,7 @@ class Produit
 
     public function getImage()
     {
-        return $this->image;
+        return (is_resource($this->image)) ? utf8_encode(base64_encode(stream_get_contents( ($this->image) ) ) ) : $this->image;
     }
 
     public function setImage($image): self

@@ -17,7 +17,7 @@ class BurgerMenu
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'burgerMenus')]
-    #[Groups('menu:read')]
+    #[Groups("menu:read", 'burger:read')]
     private $burger;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'burgerMenus')]
