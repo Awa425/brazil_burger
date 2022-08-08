@@ -8,17 +8,27 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FritteRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\PostImageController;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FritteRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        'post'=>[
+            'denormalization_context' => ['groups' => ['fritte:write']]
+        ],
+        'get'
+    ]
+)]
 class Fritte extends Produit
 {
     #[ORM\OneToMany(mappedBy: 'fritte', targetEntity: FritteMenu::class)]
+    #[Groups(['menu:read'])]
     private $fritteMenus;
 
     public function __construct()
     {
         $this->fritteMenus = new ArrayCollection();
+        $this->type='FRITTE';
     }
 
     public function getId(): ?int

@@ -7,17 +7,31 @@ use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'normalization_context' => ['groups' => ['zone:read']],
+        ],
+        "post" => [
+            // 'denormalization_context' => ['groups' => ['write']],
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message" => "Vous n'avez pas access à cette Ressource",
+        ]
+    ]
+)]
 class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['zone:read','commande:writes'])]
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['zone:read'])]
     private $prix_livraison;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]
@@ -27,6 +41,7 @@ class Zone
     private $quartiers;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['zone:read','itemCommande:read','clentsSubressource:read'])]
     private $nom_zone;
 
     public function __construct()

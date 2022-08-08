@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "descrim", type: "string")]
@@ -20,34 +23,55 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ]
 )]
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'normalization_context' => ['groups' => ['produits:read']],
+        ],
+        "post"
+    ]
+)]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read", 'menu:read' ,"catalogue:read"])]
+    #[Groups(["burger:read",'commande:write',"menu:read" ,"catalogue:read",'tailleBoisson:read','burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','lire:commande','itemCommande:read','commande:writes'])]
     protected $id;
 
     // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(["burger:read", "catalogue:read", 'menu:read'])]
+    #[Groups(["burger:read",'fritte:write' ,"catalogue:read", "menu:read","tailleBoisson:read","tailleSubressource:read",'burgerSubresource:read','burgerMenu:read','ligneCommande:write',
+        'boisson:write','boisson:read', 'commande:read','produits:read','itemCommande:read','commande:write','clentsSubressource:read'])]
     protected $nom;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(["burger:read", "menu:read" ,"catalogue:read", 'menu:read'])]
+    #[Groups(["burger:read",'fritte:write' ,"menu:read" ,"catalogue:read",'burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','tailleBoisson:read'])]
     protected $prix;
 
-    #[SerializedName('image')]
+    // #[SerializedName('image')]
+    #[Groups(['boisson:write','fritte:write','commande:read'])]
     protected $pathFile;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(["burger:read", "menu:read", 'menu:read'])]
+    #[Groups(["burger:read", "menu:read"])]
     protected $etat = true;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(["burger:read", "catalogue:read", 'menu:read'])]
+    #[Groups(["burger:read" ,"catalogue:read",'commande:write' ,'itemCommande:read','menu:read','tailleBoisson:read','tailleSubressource:read','burgerSubresource:read','burgerMenu:read','boisson:write','boisson:read','produits:read','itemCommande:read'])]
     private $image;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(["burger:read", 'menu:read', "catalogue:read",'burgerMenu:read','produits:read'])]
+    protected $type;
+
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
+    private $ligneCommandes;
+
+    public function __construct()
+    {
+        $this->ligneCommandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -122,5 +146,56 @@ class Produit
         return $this;
     }
 
+
+
  
+
+    /**
+     * Get the value of type
+     */ 
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @return  self
+     */ 
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    public function getLigneCommandes(): Collection
+    {
+        return $this->ligneCommandes;
+    }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getProduit() === $this) {
+                $ligneCommande->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
 }

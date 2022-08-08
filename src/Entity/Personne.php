@@ -15,13 +15,15 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    // #[Groups(["menu_all"])]
+    #[Groups(['commande:writes'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['client:write'])]
     protected $prenom;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['client:write'])]
     protected $nom;
 
     #[ORM\Column(type: 'boolean', nullable: true)]

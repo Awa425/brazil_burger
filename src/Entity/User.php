@@ -39,13 +39,14 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
 
     #[Assert\Email(message: "Le mail '{{ value }}' est invalide.")]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["all"])]
+    #[Groups(["all",'client:write'])]
     protected $email;
 
     #[ORM\Column(type: 'json')]
     protected $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(['client:write'])]
     protected $password;
 
     #[ORM\Column(type: 'boolean')]

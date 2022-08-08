@@ -25,7 +25,13 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ]
-    ]    
+    ] ,
+    subresourceOperations: [
+        'menus_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/menus/{id}/burger_menus',
+        ]
+    ]   
 )]
 class Menu extends Produit
 {
@@ -35,18 +41,20 @@ class Menu extends Produit
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: FritteMenu::class, cascade:["persist"])]
     // #[SerializedName('Fritte')]
-    #[Groups(['menu:read'])]
+    #[Groups(['menu:read','catalogue:read'])]
     private $fritteMenus;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: BurgerMenu::class, cascade:["persist"])]
     #[Assert\NotBlank(message: "Champs obligatoire.")]
     // #[SerializedName('Burger')]
-    #[Groups(['menu:read'])]
+    #[Groups(['menu:read','catalogue:read'])]
+    #[ApiSubresource()]
     private $burgerMenus;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class, cascade:["persist"])]
-    #[Groups(['menu:read'])]
+    #[Groups(['menu:read','catalogue:read'])]
     // #[SerializedName('Boisson')]
+    #[ApiSubresource()]
     private $menuTailles;
 
 
@@ -56,6 +64,7 @@ class Menu extends Produit
         $this->fritteMenus = new ArrayCollection();
         $this->burgerMenus = new ArrayCollection();
         $this->menuTailles = new ArrayCollection();
+        $this->type='MENU';
     }
 
 

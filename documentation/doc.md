@@ -76,4 +76,19 @@
 
 # Gestionnaire de Dependance
 ` C'est un outils que l' on installe, avant les outils, a chaque fois qu' on voulait utiliser une dependance on le telecharger, ajouter ds le projet et le configurer mais maintenent c' est ces outils qui joue ce role, il permet de telecharger les dependances, l'ajouter ds le projet le configurer et gerer les conflits entre les dependances.`
-` `
+
+# Api Subresource
+` #[ApiResource(
+    subresourceOperations: [
+        'tailles_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/tailles/{id}/taille_boissons',
+        ]
+    ]
+)] `
+
+`  subresourceOperations: [
+        'api_tailles_taille_boissons_get_subresource' => [
+           'normalization_context' => ['groups' => ['tailleSubressource:read']],
+        ]
+    ]`

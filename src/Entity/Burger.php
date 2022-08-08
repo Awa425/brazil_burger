@@ -43,22 +43,19 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 class Burger extends Produit
 {
-    // #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
-    // private $menus;
-
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: BurgerMenu::class)]
+    #[Groups(['catalogue:read'])]
     private $burgerMenus;
 
     public function __construct()
     {
         $this->burgerMenus = new ArrayCollection();
+        $this->type='BURGER';
+        
     }
-
-
-
 
     public function getGestionnaire(): ?Gestionnaire
     {
@@ -102,3 +99,8 @@ class Burger extends Produit
         return $this;
     }
 }
+
+
+//    normalizationContext: [
+//        'groups' => ['read:commande']
+//    ]

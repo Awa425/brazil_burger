@@ -8,23 +8,37 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BurgerMenuRepository::class)]
-// #[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'normalization_context' => ['groups' => ['burgerMenu:read']],  
+        ],
+        "post" 
+    ],
+    subresourceOperations: [
+        'api_menus_burger_menus_get_subresource' => [
+           'normalization_context' => ['groups' => ['burgerSubresource:read']],
+        ]
+    ]
+)]
 class BurgerMenu
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups('catalogue:read')]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'burgerMenus')]
-    #[Groups("menu:read", 'burger:read')]
+    #[Groups("menu:read",'catalogue:read','burger:read','catalogue:read','burgerSubresource:read','burgerMenu:read')]
     private $burger;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'burgerMenus')]
+    // #[Groups('catalogue:read')]
     private $menu;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups('menu:read')]
+    #[Groups('menu:read','catalogue:read','burgerSubresource:read','burgerMenu:read')]
     private $quantite;
 
     public function getId(): ?int

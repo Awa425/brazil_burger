@@ -9,8 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class ProduitImagePersister implements ContextAwareDataPersisterInterface{
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
-       
+        $this->entityManager = $entityManager;  
     }
 
     public function supports($data, array $context = []):bool{

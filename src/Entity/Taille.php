@@ -6,27 +6,42 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TailleRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TailleRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    subresourceOperations: [
+        'tailles_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/tailles/{id}/taille_boissons',
+        ]
+    ]
+)]
 class Taille
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['menu:read','tailleBoisson:read','catalogue:read'])]    
     private $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['menu:read','catalogue:read','tailleBoisson:read'])]
     private $nom;
 
     #[ORM\OneToMany(mappedBy: 'taille', targetEntity: TailleBoisson::class)]
+    #[Groups(['menu:read','catalogue:read'])]
+    #[ApiSubresource()]
     private $tailleBoissons;
 
     #[ORM\OneToMany(mappedBy: 'taille', targetEntity: MenuTaille::class)]
+    #[Groups(['menu:read'])]
     private $menuTailles;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['menu:read', 'tailleBoisson:read','catalogue:read','boisson:write'])]
     private $prix;
 
     public function __construct()

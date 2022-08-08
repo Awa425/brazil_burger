@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\FritteMenuRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FritteMenuRepository::class)]
+#[ApiResource()]
 class FritteMenu
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['menu:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'fritteMenus')]
