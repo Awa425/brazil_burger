@@ -60,6 +60,9 @@ class TailleBoisson
     #[Groups(['tailleSubressource:read','catalogue:read','tailleBois:write','tailleBoisson:read'])]
     private $boisson;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $prix;
+
     public function __construct()
     {
         $this->lignecommandeTailleboissons = new ArrayCollection();
@@ -69,8 +72,6 @@ class TailleBoisson
     {
         return $this->id;
     }
-
-  
 
     public function getTaille(): ?Taille
     {
@@ -137,6 +138,30 @@ class TailleBoisson
     public function setBoisson(?Boisson $boisson): self
     {
         $this->boisson = $boisson;
+
+        return $this;
+    }
+
+    public function getPrix(): ?int
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?int $prix): self
+    {
+        $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

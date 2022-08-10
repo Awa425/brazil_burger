@@ -15,9 +15,7 @@ use Symfony\Component\Validator\Constraints\Date;
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 #[ApiResource(
     collectionOperations: [
-        "get" =>[
-            'normalization_context' => ['groups' => ['commande:write']]
-        ],
+        "get" ,
         "post" => [
             'denormalization_context' => ['groups' => ['commande:writes']]
         ]

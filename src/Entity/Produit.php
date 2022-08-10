@@ -42,11 +42,11 @@ class Produit
     // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(["burger:read",'fritte:write' ,"catalogue:read", "menu:read","tailleBoisson:read","tailleSubressource:read",'burgerSubresource:read','burgerMenu:read','ligneCommande:write',
-        'boisson:write','boisson:read', 'commande:read','produits:read','itemCommande:read','commande:write','clentsSubressource:read'])]
+        'boisson:write','boisson:read', 'commande:read','produits:read','itemCommande:read','commande:write','clentsSubressource:read','commande:writes'])]
     protected $nom;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(["burger:read",'fritte:write' ,"menu:read" ,"catalogue:read",'burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','tailleBoisson:read'])]
+    #[Groups(["burger:read",'fritte:write' ,"menu:read" ,"catalogue:read",'burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','tailleBoisson:read','commande:writes'])]
     protected $prix;
 
     // #[SerializedName('image')]
@@ -58,7 +58,7 @@ class Produit
     protected $etat = true;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(["burger:read" ,"catalogue:read",'commande:write' ,'itemCommande:read','menu:read','tailleBoisson:read','tailleSubressource:read','burgerSubresource:read','burgerMenu:read','boisson:write','boisson:read','produits:read','itemCommande:read'])]
+    #[Groups(["burger:read" ,"catalogue:read",'commande:write' ,'itemCommande:read','menu:read','tailleBoisson:read','tailleSubressource:read','burgerSubresource:read','burgerMenu:read','boisson:write','boisson:read','produits:read','itemCommande:read','commande:writes'])]
     private $image;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
