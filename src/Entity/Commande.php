@@ -40,14 +40,14 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['clentsSubressource:read','itemCommande:read'])]
+    #[Groups(['clentsSubressource:read','itemCommande:read','zone:read','livraison:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commande')]
     private $livraison;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commande')]
-    #[Groups(['commande:write','itemCommande:read','clentsSubressource:read','lire:commande','commande:writes'])] 
+    #[Groups(['commande:write','itemCommande:read','clentsSubressource:read','lire:commande','commande:writes','livraison:read'])] 
     private $zone;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -58,15 +58,15 @@ class Commande
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
-    #[Groups(['commande:writes','lire:commande'])]
+    #[Groups(['commande:writes','lire:commande','zone:read'])]
     private $client;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['clentsSubressource:read','commandePatch:write'])]
+    #[Groups(['clentsSubressource:read','commandePatch:write','zone:read'])]
     private $etat = "en cours";
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class, cascade:["persist"])]
-    #[Groups(['commande:writes','itemCommande:read','commande:write','clentsSubressource:read'])]
+    #[Groups(['commande:writes','itemCommande:read','commande:write','clentsSubressource:read','zone:read'])]
     private $ligneCommande;
 
     public function __construct()

@@ -27,7 +27,7 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['zone:read','commande:writes'])]
+    #[Groups(['zone:read','commande:writes','livraison:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -35,6 +35,7 @@ class Zone
     private $prix_livraison;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]
+    #[Groups(['zone:read'])]
     private $commande;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]

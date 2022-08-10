@@ -23,7 +23,7 @@ class LigneCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['ligneCommande:write'])]
+    #[Groups(['ligneCommande:write','zone:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -37,7 +37,7 @@ class LigneCommande
     private $commande;
 
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
-    #[Groups('commande:writes','itemCommande:read','ligneCommande:write','commande:write','clentsSubressource:read')]
+    #[Groups('zone:read','commande:writes','itemCommande:read','ligneCommande:write','commande:write','clentsSubressource:read')]
     private $produit;
 
     public function __construct()

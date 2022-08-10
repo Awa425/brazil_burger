@@ -36,13 +36,13 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read",'commande:write',"menu:read" ,"catalogue:read",'tailleBoisson:read','burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','lire:commande','itemCommande:read','commande:writes'])]
+    #[Groups(["burger:read",'commande:write',"menu:read" ,"catalogue:read",'tailleBoisson:read','burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','lire:commande','itemCommande:read','commande:writes','zone:read'])]
     protected $id;
 
     // #[Groups(["simple","all"])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(["burger:read",'fritte:write' ,"catalogue:read", "menu:read","tailleBoisson:read","tailleSubressource:read",'burgerSubresource:read','burgerMenu:read','ligneCommande:write',
-        'boisson:write','boisson:read', 'commande:read','produits:read','itemCommande:read','commande:write','clentsSubressource:read','commande:writes'])]
+        'boisson:write','boisson:read', 'commande:read','produits:read','itemCommande:read','commande:write','clentsSubressource:read','commande:writes','zone:read'])]
     protected $nom;
 
     #[ORM\Column(type: 'float', nullable: true)]

@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Client extends User
 {
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['client:write'])]
+    #[Groups(['client:write','zone:read'])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
