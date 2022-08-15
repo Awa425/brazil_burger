@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LivraisonRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,14 +12,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
 #[ApiResource(
-    // collectionOperations:[
-    //     // 'post' => [
-    //     //     'denormalization_context' => ['groups' => ['livraison:write']],
-    //     // ],
-    //     // 'get' => [
-    //     //     'normalization_context' => ['groups' => ['livraison:read']],
-    //     // ]
-    // ]
+    collectionOperations:[
+        // 'get',
+        'post' => [
+            'denormalization_context' => ['groups' => ['livraison:write']],
+        ],
+        'get' => [
+            'normalization_context' => ['groups' => ['livraison:read']],
+        ]
+    ],
+    itemOperations:[
+        'put',
+        'get' => [
+            'normalization_context' => ['groups' => ['livraison:read']],
+        ]
+    ]
 )]
 class Livraison
 {
@@ -29,15 +37,20 @@ class Livraison
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
-    #[Groups(['livraison:read'])]
+    #[Groups(['livraison:write','livraison:read'])]
     private $livreur;
 
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
-    #[Groups(['livraison:read'])]
+    #[Groups(['livraison:write','livraison:read'])]
     private $commande;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['livraison:write','livraison:read'])]
+    private $date;
 
     public function __construct()
     {
+        $this->date=new DateTime();
         $this->commande = new ArrayCollection();
     }
 
@@ -84,6 +97,18 @@ class Livraison
                 $commande->setLivraison(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

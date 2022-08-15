@@ -15,15 +15,15 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['commande:writes','livraison:read'])]
+    #[Groups(['livreur:read','commande:writes','livraison:read','livraison:write'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['client:write'])]
+    #[Groups(['client:write','livreur:read','zone:read','livraison:read'])]
     protected $prenom;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['client:write'])]
+    #[Groups(['client:write','livreur:read','zone:read','livraison:read'])]
     protected $nom;
 
     #[ORM\Column(type: 'boolean', nullable: true)]

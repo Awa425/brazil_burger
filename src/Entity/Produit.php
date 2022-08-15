@@ -36,7 +36,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read",'commande:write',"menu:read" ,"catalogue:read",'tailleBoisson:read','burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','lire:commande','itemCommande:read','commande:writes','zone:read'])]
+    #[Groups(['commande:writes',"burger:read",'commande:write',"menu:read" ,"catalogue:read",'tailleBoisson:read','burgerSubresource:read','burgerMenu:read','boisson:read','produits:read','lire:commande','itemCommande:read','zone:read'])]
     protected $id;
 
     // #[Groups(["simple","all"])]
@@ -54,7 +54,7 @@ class Produit
     protected $pathFile;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(["burger:read", "menu:read"])]
+    #[Groups(["burger:read", "menu:read",'produits:read'])]
     protected $etat = true;
 
     #[ORM\Column(type: 'blob', nullable: true)]

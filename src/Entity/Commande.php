@@ -40,7 +40,7 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['clentsSubressource:read','itemCommande:read','zone:read','livraison:read'])]
+    #[Groups(['livraison:read','clentsSubressource:read','itemCommande:read','zone:read', 'livraison:write'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commande')]
@@ -58,7 +58,7 @@ class Commande
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
-    #[Groups(['commande:writes','lire:commande','zone:read'])]
+    #[Groups(['commande:writes','lire:commande','zone:read','livraison:read'])]
     private $client;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]

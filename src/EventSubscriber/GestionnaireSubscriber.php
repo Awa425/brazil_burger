@@ -63,8 +63,8 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                 $cpt = 0;
                 $prix = 0;
                 foreach($args->getObject()->getLigneCommande() as $ligneCommande){
+                    // dd($args->getObject());    
                     if($ligneCommande->getProduit() instanceof Burger or $ligneCommande->getProduit() instanceof Menu){
-                        
                         $cpt = 1;
                     }
                 } 
@@ -80,8 +80,7 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                             $prix += $boisson->getTailleBoisson()->getTaille()->getPrix() * $boisson->getQuantite();  
                         }
                     }
-                    // dd($args->getObject());
-                    // $args->getObject()->setPrix($prix); 
+                    $args->getObject()->setPrix($prix); 
                 } 
                 else
                 dd('veuillez entrer au moins un burger');

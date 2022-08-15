@@ -8,15 +8,26 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreurRepository;
+use PhpParser\Node\Scalar\MagicConst\Dir;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations:[
+        'post',
+        'get' => [
+            'normalization_context' => ['groups' => ['livreur:read']],
+        ]
+    ]
+)]
 class Livreur extends User
 {
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['livreur:read','livraison:read'])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['livreur:read','livraison:read'])]
     private $matricule;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'livreur')]
@@ -25,9 +36,14 @@ class Livreur extends User
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
     private $livraisons;
 
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['livreur:read'])]
+    private $disponibilite;
+
     public function __construct()
     {
         parent::__construct();
+        $this->disponibilite = "oui";
         $this->livraisons = new ArrayCollection();
     }
 
@@ -93,6 +109,18 @@ class Livreur extends User
                 $livraison->setLivreur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDisponibilite(): ?string
+    {
+        return $this->disponibilite;
+    }
+
+    public function setDisponibilite(?string $disponibilite): self
+    {
+        $this->disponibilite = $disponibilite;
 
         return $this;
     }
