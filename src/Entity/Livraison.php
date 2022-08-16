@@ -41,7 +41,7 @@ class Livraison
     private $livreur;
 
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
-    #[Groups(['livraison:write','livraison:read'])]
+    #[Groups(['livraison:write','livraison:read','itemLivreur:read'])]
     private $commande;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

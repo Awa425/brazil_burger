@@ -92,3 +92,7 @@
            'normalization_context' => ['groups' => ['tailleSubressource:read']],
         ]
     ]`
+
+# Desactiver la pagination par defaut, dans api_platform.yaml, on ajoute ca: 
+*  defaults:
+        pagination_enabled: false    

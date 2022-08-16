@@ -63,7 +63,6 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                 $cpt = 0;
                 $prix = 0;
                 foreach($args->getObject()->getLigneCommande() as $ligneCommande){
-                    // dd($args->getObject());    
                     if($ligneCommande->getProduit() instanceof Burger or $ligneCommande->getProduit() instanceof Menu){
                         $cpt = 1;
                     }
@@ -76,6 +75,7 @@ class GestionnaireSubscriber implements EventSubscriberInterface
                         $prix += $ligneCommande->getProduit()->getPrix() * $ligneCommande->getQuanite();  
                     }  
                     foreach($args->getObject()->getLigneCommande() as $ligneCommande){
+                        // dd($args->getObject()->getLigneCommande());
                         foreach ($ligneCommande->getLignecommandeTailleboissons() as $boisson) {
                             $prix += $boisson->getTailleBoisson()->getTaille()->getPrix() * $boisson->getQuantite();  
                         }

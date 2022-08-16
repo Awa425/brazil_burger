@@ -18,26 +18,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get' => [
             'normalization_context' => ['groups' => ['livreur:read']],
         ]
+    ],
+    itemOperations:[
+        'put',
+        'get'=>['normalization_context' => ['groups' => ['itemLivreur:read']],]
     ]
 )]
 class Livreur extends User
 {
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['livreur:read','livraison:read'])]
+    #[Groups(['livreur:read','livraison:read','itemLivreur:read'])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['livreur:read','livraison:read'])]
+    #[Groups(['livreur:read','livraison:read','itemLivreur:read'])]
     private $matricule;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'livreur')]
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
+    #[Groups(['itemLivreur:read'])]
     private $livraisons;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    #[Groups(['livreur:read'])]
+    #[Groups(['livreur:read','itemLivreur:read'])]
     private $disponibilite;
 
     public function __construct()

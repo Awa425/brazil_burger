@@ -40,7 +40,7 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['livraison:read','clentsSubressource:read','itemCommande:read','zone:read', 'livraison:write'])]
+    #[Groups(['livraison:read','itemLivreur:read','clentsSubressource:read','itemCommande:read','zone:read', 'livraison:write'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commande')]
@@ -62,7 +62,7 @@ class Commande
     private $client;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['clentsSubressource:read','commandePatch:write','zone:read'])]
+    #[Groups(['clentsSubressource:read','itemLivreur:read','commandePatch:write','zone:read'])]
     private $etat = "en cours";
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class, cascade:["persist"])]
