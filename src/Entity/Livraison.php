@@ -48,9 +48,14 @@ class Livraison
     #[Groups(['livraison:write','livraison:read'])]
     private $date;
 
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['livraison:read'])]
+    private $etat;
+
     public function __construct()
     {
         $this->date=new DateTime();
+        $this->etat='etape 1';
         $this->commande = new ArrayCollection();
     }
 
@@ -109,6 +114,18 @@ class Livraison
     public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?string $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }

@@ -146,10 +146,6 @@ class Produit
         return $this;
     }
 
-
-
- 
-
     /**
      * Get the value of type
      */ 

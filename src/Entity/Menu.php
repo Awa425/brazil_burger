@@ -40,20 +40,17 @@ class Menu extends Produit
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: FritteMenu::class, cascade:["persist"])]
-    // #[SerializedName('Fritte')]
     #[Groups(['menu:read','catalogue:read'])]
     private $fritteMenus;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: BurgerMenu::class, cascade:["persist"])]
     #[Assert\NotBlank(message: "Champs obligatoire.")]
-    // #[SerializedName('Burger')]
     #[Groups(['menu:read','catalogue:read'])]
     #[ApiSubresource()]
     private $burgerMenus;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class, cascade:["persist"])]
     #[Groups(['menu:read','catalogue:read'])]
-    // #[SerializedName('Boisson')]
     #[ApiSubresource()]
     private $menuTailles;
 

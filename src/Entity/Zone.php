@@ -42,7 +42,7 @@ class Zone
     private $quartiers;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['zone:read','itemCommande:read','clentsSubressource:read','livraison:read'])]
+    #[Groups(['zone:read','itemCommande:read','clentsSubressource:read','livraison:read','commande:writes'])]
     private $nom_zone;
 
     public function __construct()
