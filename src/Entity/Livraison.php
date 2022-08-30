@@ -26,6 +26,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get' => [
             'normalization_context' => ['groups' => ['livraison:read']],
         ]
+    ],
+    subresourceOperations: [
+        'api_livreurs_livraisons_get_subresource' => [
+        //    'normalization_context' => ['groups' => ['livraisonsSubressource:read']],
+        ]
     ]
 )]
 class Livraison

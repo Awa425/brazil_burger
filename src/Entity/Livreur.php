@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'post',
         'get' => [
             'normalization_context' => ['groups' => ['livreur:read']],
+        ]
+    ],
+    subresourceOperations: [
+        'tailles_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/livreurs/{id}/livraisons',
         ]
     ],
     itemOperations:[
@@ -39,6 +46,7 @@ class Livreur extends User
 
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
     #[Groups(['itemLivreur:read'])]
+    #[ApiSubresource()]
     private $livraisons;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]

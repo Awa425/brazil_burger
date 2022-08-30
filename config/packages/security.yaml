@@ -38,6 +38,7 @@ security:
     access_control:
         # - { path: ^/api/login, roles: PUBLIC_ACCESS }
         # - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/api/users, roles: PUBLIC_ACCESS, method: GET }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
         - { path: ^/api/burgers, roles: PUBLIC_ACCESS, method: GET }
         - { path: ^/api/menus, roles: PUBLIC_ACCESS, method: GET }

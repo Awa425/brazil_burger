@@ -16,13 +16,13 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "type", type: "string")]
-#[ORM\DiscriminatorMap(["client" => "Client", "gestionnaire" => "Gestionnaire"])]
+#[ORM\DiscriminatorMap(["client" => "Client", "gestionnaire" => "Gestionnaire", "livreur" => "Livreur"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     collectionOperations: [
         "get" => [
-            "security" => "is_granted('ROLE_GESTIONNAIRE')",
-            "security_message" => "Vous n'avez pas access à cette Ressource",
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message" => "Vous n'avez pas access à cette Ressource",
         ],
         'post',
         'VALIDMAIL' => [
@@ -39,7 +39,7 @@ class User extends Personne implements UserInterface, PasswordAuthenticatedUserI
 
     #[Assert\Email(message: "Le mail '{{ value }}' est invalide.")]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["all",'client:write'])]
+    #[Groups(["all",'livreur:read','client:write'])]
     protected $email;
 
     #[ORM\Column(type: 'json')]

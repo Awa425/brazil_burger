@@ -69,6 +69,9 @@ class Commande
     #[Groups(['commande:writes','itemCommande:read','commande:write','clentsSubressource:read','zone:read'])]
     private $ligneCommande;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $code;
+
     public function __construct()
     {
         $this->date=new DateTime();
@@ -213,5 +216,22 @@ class Commande
         $this->ligneCommande = $ligneCommande;
 
         return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(?int $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function generateCode()
+    {
+        $this->code = rand(1000, 9999);
     }
 }
