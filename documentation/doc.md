@@ -1,3 +1,14 @@
+#Connexion gestionnaire:
+` {
+  "email": "gestionnaire@gmail.com",
+  "password": "ok",
+  "prenom": "MyBoy",
+  "nom": "Diop",
+  "etat": true
+} `
+
+
+# Password "ok"
 # API Autodécouvrable: `C'est un api qui nous permet lorsqu'on est sur une ressource d'obtenir toutes les endPoint nous permettant d'acceder à cette ressource(Par exemple:API PLATEFORM).`
 
 # API Autodecrite: `Si on a une action que l'on doit effectuer sur une ressource,on doit connaitre les données que l'on doit lui transmettre dans l'entete(Header) et on doit savoir aussi quel format de donnees il va retounée.`

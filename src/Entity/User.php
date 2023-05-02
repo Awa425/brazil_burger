@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTime;
 use App\Entity\Personne;
 use App\Controller\EmailValider;
